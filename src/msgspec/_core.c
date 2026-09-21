@@ -13694,7 +13694,10 @@ mpack_encode_uncommon(EncoderState *self, PyTypeObject *type, PyObject *obj)
         return mpack_encode_set(self, obj);
     }
     else if (!PyType_Check(obj) && type->tp_dict != NULL) {
-        PyObject *fields = PyObject_GetAttr(obj, self->mod->str___dataclass_fields__);
+        PyObject *fields = NULL;
+        if (_PyType_Lookup(type, self->mod->str___dataclass_fields__) != NULL) {
+            fields = PyObject_GetAttr(obj, self->mod->str___dataclass_fields__);
+        }
         if (fields != NULL) {
             int status = mpack_encode_dataclass(self, obj, fields);
             Py_DECREF(fields);
@@ -14833,7 +14836,10 @@ json_encode_uncommon(EncoderState *self, PyTypeObject *type, PyObject *obj) {
         return json_encode_set(self, obj);
     }
     else if (!PyType_Check(obj) && type->tp_dict != NULL) {
-        PyObject *fields = PyObject_GetAttr(obj, self->mod->str___dataclass_fields__);
+        PyObject *fields = NULL;
+        if (_PyType_Lookup(type, self->mod->str___dataclass_fields__) != NULL) {
+            fields = PyObject_GetAttr(obj, self->mod->str___dataclass_fields__);
+        }
         if (fields != NULL) {
             int status = json_encode_dataclass(self, obj, fields);
             Py_DECREF(fields);
@@ -20634,7 +20640,10 @@ to_builtins(ToBuiltinsState *self, PyObject *obj, bool is_key) {
         return to_builtins_set(self, obj, is_key);
     }
     else if (!PyType_Check(obj) && type->tp_dict != NULL) {
-        PyObject *fields = PyObject_GetAttr(obj, self->mod->str___dataclass_fields__);
+        PyObject *fields = NULL;
+        if (_PyType_Lookup(type, self->mod->str___dataclass_fields__) != NULL) {
+            fields = PyObject_GetAttr(obj, self->mod->str___dataclass_fields__);
+        }
         if (fields != NULL) {
             PyObject *out = to_builtins_dataclass(self, obj, fields);
             Py_DECREF(fields);
